@@ -16,15 +16,16 @@ data = pd.read_hdf("data/train_dc2020.h5", "data")
 labels = pd.read_csv("data/train_labels.csv")
 
 data = utils.convert_feature_name(data)
-print(data.columns)
 
 train_data, test_data, train_labels, test_labels = train_test_split(data, labels, test_size=0.2, random_state=42)
 
-print(train_data.head(), train_labels["source_id"].values)
-
-
-model = RandomForestClassifier(n_estimators=10, random_state=42, verbose=4)
-model.fit(train_data, train_labels["source_id"])
-test_pred = model.predict(test_data)
-print(accuracy_score(test_labels["source_id"], test_pred))
-print(confusion_matrix(test_labels["source_id"], test_pred))
+def RF(n_estimators = 20):
+    model = RandomForestClassifier(n_estimators=n_estimators, random_state=42, verbose=4)
+    model.fit(train_data, train_labels["source_id"])
+    test_pred = model.predict(test_data)
+    print(accuracy_score(test_labels["source_id"], test_pred))
+    print(confusion_matrix(test_labels["source_id"], test_pred))
+    
+    
+if __name__ == "__main__":
+    RF()
