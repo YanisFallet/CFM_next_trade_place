@@ -2,9 +2,17 @@ import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 
+from sklearn.metrics import accuracy_score
 
 import utils
 
+
+def load_model(model, path):
+    model.load_state_dict(torch.load(path))
+    return model
+
+def save_model(model, path):
+    torch.save(model.state_dict(), path)
 
 
 class MLP(nn.Module):
@@ -61,6 +69,7 @@ def train(model, optimizer, criterion, train_data, train_labels, test_data, test
 
 if __name__ == "__main__":
     model = MLP()
+    model = load_model(model, "models/model_90.pth")
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     data, labels = utils.load_data(remove_na=True)
@@ -72,5 +81,13 @@ if __name__ == "__main__":
     train_labels = torch.tensor(train_labels["source_id"].values).long()
     test_labels = torch.tensor(test_labels["source_id"].values).long()
     
-    train(model, optimizer, criterion, train_data, train_labels, test_data, test_labels, epochs=100)
+    # train(model, optimizer, criterion, train_data, train_labels, test_data, test_labels, epochs=100)
+    
+    test_output = model(test_data)
+    print(test_output.shape)
+    test_output = torch.argmax(test_output, dim=1)
+    print(torch.bincount(test_output).numpy())
+
+    print(accuracy_score(test_labels, test_output))
+    
     
