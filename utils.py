@@ -9,7 +9,7 @@ def convert_feature_name(data : pd.DataFrame) -> pd.DataFrame:
     data.columns = [f"{col[1]}_{col[0]}" if isinstance(col, tuple) else col for col in data.columns]
     return data
 
-def load_data(train=True, train_labels=True, test_data=False, remove_na=False) -> tuple:
+def load_data(train=True, train_labels=True, test_data=False, remove_na=False, convert_features_n = False) -> tuple:
     data, labels, test= None, None, None
     if train:
         data = pd.read_hdf("data/train_dc2020.h5", "data")
@@ -23,6 +23,9 @@ def load_data(train=True, train_labels=True, test_data=False, remove_na=False) -
     if remove_na:
         m = clean_data(data)
         results = [result[~m] for result in results]
+        
+    if convert_features_n:
+        results = [convert_feature_name(d) if d.shape[1] > 10 else d for d in results]
     
     return tuple(results)
 
