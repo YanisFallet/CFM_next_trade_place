@@ -26,8 +26,8 @@ def RF(n_estimators = 5):
     test_pred = model.predict(test_data)
     print(accuracy_score(test_labels["source_id"], test_pred))
     print(confusion_matrix(test_labels["source_id"], test_pred))
-    
-    
+
+
 def XGB(n_estimators = 100):
     model = XGBClassifier(n_estimators = n_estimators)
     model.fit(train_data, train_labels["source_id"], verbose = 5)
